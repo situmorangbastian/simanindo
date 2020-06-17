@@ -1,6 +1,7 @@
 import { v4 } from "https://deno.land/std/uuid/mod.ts"
 
 import Account from "../interface.ts"
+import { ErrInternalServer, ErrNotFound } from "../error.ts"
 import { AccountModel } from "../repository/model.ts"
 
 const signUpRepo = async (account: Account) => {
@@ -18,24 +19,31 @@ const signUpRepo = async (account: Account) => {
         }  
     } catch (e) {
         console.log(e)
-        throw new Error(e)
+        return {
+            message: ErrInternalServer
+        }
     }
 }
 
 const signInRepo = async (account: Account) => {
     try {
-        const data = await AccountModel.select('name', 'email').
+        let data = await AccountModel.select('name', 'email').
             where('email','=', account.email). 
             where('password', '=', account.password).
             first()
-        
-        return {
-            name: data.name,
-            email: data.email,
-        }  
+            
+        if (data == undefined){
+            data = {
+                message: ErrNotFound,
+            }
+        }
+
+        return data
     } catch (e) {
         console.log(e)
-        throw new Error(e)
+        return {
+            message: ErrInternalServer
+        }
     }
 }
   
