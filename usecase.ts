@@ -1,4 +1,4 @@
-import Account from "./interface.ts"
+import { Account } from "./entity.ts"
 import { signUpRepo, signInRepo } from './repository/account.ts'
 
 const signUp = async (account: Account) => {

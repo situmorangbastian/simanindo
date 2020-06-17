@@ -1,18 +1,18 @@
 
 import { Status } from "https://deno.land/std/http/http_status.ts"
 
+import { Router } from 'https://deno.land/x/oak@v4.0.0/mod.ts'
+
 import { Request, Response } from 'https://deno.land/x/oak@v4.0.0/mod.ts'
-import vs from "https://deno.land/x/value_schema/mod.ts"
 
 import { signUp, signIn } from './usecase.ts'
-import Account from './interface.ts'
-import { ErrNotFound, ErrInternalServer } from "./error.ts"
-
-const validateFieldObject = {
-    name: vs.string(),
-    email: vs.email(),
-    password: vs.string(),
-}
+import { 
+    Account, 
+    ErrNotFound, 
+    ErrInternalServer, 
+    validateFieldObject, 
+    vs 
+} from "./entity.ts"
 
 const signUpHandler = async ({ request, response }: { request: Request, response: Response }) => {
     const body = await request.body()
@@ -72,4 +72,12 @@ const signInHandler = async ({ request, response }: { request: Request, response
     response.status = Status.OK.valueOf()
 }
 
-export { signUpHandler, signInHandler }
+const router = new Router()
+
+router.get('/jarvis', (context) => {
+	context.response.body = 'ok'
+})
+router.post('/accounts/signup', signUpHandler)
+router.post('/accounts/signin', signInHandler)
+
+export { router }

@@ -1,7 +1,10 @@
 import { v4 } from "https://deno.land/std/uuid/mod.ts"
 
-import Account from "../interface.ts"
-import { ErrInternalServer, ErrNotFound } from "../error.ts"
+import { 
+    Account, 
+    ErrInternalServer, 
+    ErrNotFound 
+} from "../entity.ts"
 import { AccountModel } from "../repository/model.ts"
 
 const signUpRepo = async (account: Account) => {
