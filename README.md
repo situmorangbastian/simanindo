@@ -1,8 +1,6 @@
 # SIMANINDO
 
-Simple Account Service
-
-## Installation Deno
+## Installation
 
 `brew install deno`
 
