@@ -10,6 +10,6 @@ Make sure to set the .env file (see: .env.example).
 
 ## Running
 
-To start API, run:
+To start APP, run:
 
 `make run`
