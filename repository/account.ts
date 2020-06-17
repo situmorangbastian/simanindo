@@ -10,7 +10,7 @@ const signUpRepo = async (account: Account) => {
             name: account.name,
             email: account.email,
             password: account.password
-        });
+        })
 
         return {
             name: account.name,
@@ -27,7 +27,7 @@ const signInRepo = async (account: Account) => {
         const data = await AccountModel.select('name', 'email').
             where('email','=', account.email). 
             where('password', '=', account.password).
-            first();
+            first()
         
         return {
             name: data.name,

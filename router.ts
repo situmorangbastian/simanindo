@@ -10,4 +10,4 @@ router.get('/jarvis', (context) => {
 router.post('/accounts/signup', signUpHandler)
 router.post('/accounts/signin', signInHandler)
 
-export {router}
+export { router }

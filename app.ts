@@ -8,8 +8,8 @@ import { router } from './router.ts'
 import { AccountModel } from './repository/model.ts'
 import mysql from './repository/mysql.ts'
 
-mysql.link([AccountModel]);
-await mysql.sync();
+mysql.link([AccountModel])
+await mysql.sync()
 
 const app = new Application()
 

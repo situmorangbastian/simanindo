@@ -58,4 +58,4 @@ const signInHandler = async ({ request, response }: { request: Request, response
     }
 }
 
-export { signUpHandler, signInHandler}
+export { signUpHandler, signInHandler }
