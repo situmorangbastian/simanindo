@@ -9,6 +9,7 @@ import {
     Account, 
     ErrNotFound, 
     ErrInternalServer, 
+    ErrEmailDuplicate,
     validateFieldObject, 
     vs 
 } from "./entity.ts"
@@ -33,11 +34,11 @@ const signUpHandler = async ({ request, response }: { request: Request, response
     const result = await signUp(account)
     response.body = result
     switch(result.message) { 
-        case ErrNotFound: { 
-           response.status = Status.NotFound.valueOf()
-           return 
-        } 
-        case ErrInternalServer: { 
+        case ErrEmailDuplicate:{
+            response.status = Status.Conflict.valueOf()
+            return 
+        }
+        case ErrInternalServer:{ 
             response.status = Status.InternalServerError.valueOf()
             return
         }
@@ -57,12 +58,16 @@ const signInHandler = async ({ request, response }: { request: Request, response
 
     const result = await signIn(account)
     response.body = result
-    switch(result.message) { 
-        case ErrNotFound: { 
-           response.status = Status.NotFound.valueOf()
-           return 
+    switch(result.message){ 
+        case ErrNotFound:{ 
+            response.status = Status.NotFound.valueOf()
+            return 
+        }
+        case ErrEmailDuplicate:{
+            response.status = Status.Conflict.valueOf()
+            return 
         } 
-        case ErrInternalServer: { 
+        case ErrInternalServer:{ 
             response.status = Status.InternalServerError.valueOf()
             return
         }

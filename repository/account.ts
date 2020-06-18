@@ -49,5 +49,19 @@ const signInRepo = async (account: Account) => {
         }
     }
 }
+
+const existEmailRepo = async (email: string) => {
+    try {
+        let data = await AccountModel.select('email').
+            where('email','=', email).
+            first()
+        return data
+    } catch (e) {
+        console.log(e)
+        return {
+            message: ErrInternalServer
+        }
+    }
+}
   
-export { signUpRepo, signInRepo }
+export { signUpRepo, signInRepo, existEmailRepo }

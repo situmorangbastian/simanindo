@@ -6,8 +6,9 @@ interface Account {
     password: string
 }
 
-const ErrNotFound = "Not Found"
-const ErrInternalServer = "Internal Server Error"
+const ErrNotFound = "not found"
+const ErrInternalServer = "internal server error"
+const ErrEmailDuplicate = "email already exists"
 
 const validateFieldObject = {
     name: vs.string(),
@@ -20,5 +21,6 @@ export {
     Account, 
     ErrNotFound,
     ErrInternalServer,
+    ErrEmailDuplicate,
     validateFieldObject,
 }
