@@ -3,7 +3,6 @@ import { v4 } from "https://deno.land/std/uuid/mod.ts"
 import { 
     Account, 
     ErrInternalServer, 
-    ErrNotFound 
 } from "../entity.ts"
 import { AccountModel } from "../repository/model.ts"
 
@@ -30,16 +29,10 @@ const signUpRepo = async (account: Account) => {
 
 const signInRepo = async (account: Account) => {
     try {
-        let data = await AccountModel.select('name', 'email').
+        const data = await AccountModel.select('name', 'email').
             where('email','=', account.email). 
             where('password', '=', account.password).
             first()
-            
-        if (data == undefined){
-            data = {
-                message: ErrNotFound,
-            }
-        }
 
         return data
     } catch (e) {
@@ -52,9 +45,10 @@ const signInRepo = async (account: Account) => {
 
 const existEmailRepo = async (email: string) => {
     try {
-        let data = await AccountModel.select('email').
+        const data = await AccountModel.select('email').
             where('email','=', email).
             first()
+
         return data
     } catch (e) {
         console.log(e)

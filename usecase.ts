@@ -1,6 +1,6 @@
 import { createHash } from "https://deno.land/std/hash/mod.ts";
 
-import { Account, ErrEmailDuplicate } from "./entity.ts"
+import { Account, ErrNotFound, ErrEmailDuplicate } from "./entity.ts"
 import { signUpRepo, signInRepo, existEmailRepo } from './repository/account.ts'
 
 const signUp = async (account: Account) => {
@@ -24,7 +24,14 @@ const signIn = async (account: Account) => {
     hash.update(account.password);
     account.password = hash.toString()
 
-    const result = await signInRepo(account)
+    let result = await signInRepo(account)
+
+    if (result == undefined){
+        result = {
+            message: ErrNotFound,
+        }
+    }
+    
     return result
 }
 
