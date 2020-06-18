@@ -10,8 +10,8 @@ import {
     ErrNotFound, 
     ErrInternalServer, 
     ErrEmailDuplicate,
-    validateFieldObject, 
-    vs 
+    validatorSchema, 
+    validator 
 } from "./entity.ts"
 
 const signUpHandler = async ({ request, response }: { request: Request, response: Response }) => {
@@ -19,7 +19,7 @@ const signUpHandler = async ({ request, response }: { request: Request, response
     const account: Account = body.value
 
     try {
-        vs.applySchemaObject(validateFieldObject, account, (e) => {
+        validator.applySchemaObject(validatorSchema, account, (e) => {
             const key = e.keyStack.shift()
             if(key !== undefined) {
                 response.body = {message:"invalid "+key}

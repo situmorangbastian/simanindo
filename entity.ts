@@ -10,17 +10,19 @@ const ErrNotFound = "not found"
 const ErrInternalServer = "internal server error"
 const ErrEmailDuplicate = "email already exists"
 
-const validateFieldObject = {
-    name: vs.string(),
-    email: vs.email(),
-    password: vs.string(),
+const validator = vs
+
+const validatorSchema = {
+    name: validator.string(),
+    email: validator.email(),
+    password: validator.string(),
 }
 
 export { 
-    vs,
+    validator,
     Account, 
     ErrNotFound,
     ErrInternalServer,
     ErrEmailDuplicate,
-    validateFieldObject,
+    validatorSchema,
 }

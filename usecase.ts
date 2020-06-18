@@ -1,7 +1,6 @@
 import { Account, ErrEmailDuplicate } from "./entity.ts"
 import { signUpRepo, signInRepo, existEmailRepo } from './repository/account.ts'
 
-
 const signUp = async (account: Account) => {
     const existEmail = await existEmailRepo(account.email)
     if (existEmail !== undefined){
@@ -15,8 +14,8 @@ const signUp = async (account: Account) => {
 }
 
 const signIn = async (account: Account) => {
-   const result = await signInRepo(account)
-   return result
+    const result = await signInRepo(account)
+    return result
 }
 
 export { signUp, signIn }
