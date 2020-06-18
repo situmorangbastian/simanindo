@@ -19,7 +19,7 @@ app.use(router.allowedMethods())
 app.use(({ response }: { response: Response }) => {
     response.status = Status.BadRequest.valueOf()
     response.body = {
-        message: "not found",
+        error: "not found",
     }
 })
 

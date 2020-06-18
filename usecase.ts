@@ -7,7 +7,7 @@ const signUp = async (account: Account) => {
     const existEmail = await existEmailRepo(account.email)
     if (existEmail !== undefined){
         return {
-            message: ErrEmailDuplicate
+            error: ErrEmailDuplicate
         }
     }
 
@@ -28,7 +28,7 @@ const signIn = async (account: Account) => {
 
     if (result == undefined){
         result = {
-            message: ErrNotFound,
+            error: ErrNotFound,
         }
     }
     

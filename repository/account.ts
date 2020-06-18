@@ -22,7 +22,7 @@ const signUpRepo = async (account: Account) => {
     } catch (e) {
         console.log(e)
         return {
-            message: ErrInternalServer
+            error: ErrInternalServer
         }
     }
 }
@@ -38,7 +38,7 @@ const signInRepo = async (account: Account) => {
     } catch (e) {
         console.log(e)
         return {
-            message: ErrInternalServer
+            error: ErrInternalServer
         }
     }
 }
@@ -53,7 +53,7 @@ const existEmailRepo = async (email: string) => {
     } catch (e) {
         console.log(e)
         return {
-            message: ErrInternalServer
+            error: ErrInternalServer
         }
     }
 }

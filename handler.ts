@@ -21,7 +21,7 @@ const signUpHandler = async ({ request, response }: { request: Request, response
         validator.applySchemaObject(validatorSchema, account, (e) => {
             const key = e.keyStack.shift()
             if(key !== undefined) {
-                response.body = {message:"invalid "+key}
+                response.body = { error:"invalid "+key }
                 response.status = Status.BadRequest.valueOf()
                 throw(response)
             } 
@@ -32,7 +32,7 @@ const signUpHandler = async ({ request, response }: { request: Request, response
 
     const result = await signUp(account)
     response.body = result
-    switch(result.message) { 
+    switch(result.error) { 
         case ErrEmailDuplicate:{
             response.status = Status.Conflict.valueOf()
             return 
@@ -51,13 +51,13 @@ const signInHandler = async ({ request, response }: { request: Request, response
 
     if (account.email == undefined || account.password == undefined) {
         response.status = Status.BadRequest.valueOf()
-        response.body = {message: "email and password is required" }
+        response.body = { error: "email and password is required" }
         return
     }
 
     const result = await signIn(account)
     response.body = result
-    switch(result.message){ 
+    switch(result.error){ 
         case ErrNotFound:{ 
             response.status = Status.NotFound.valueOf()
             return 
