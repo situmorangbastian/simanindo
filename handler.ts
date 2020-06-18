@@ -1,7 +1,6 @@
 import { Status } from "https://deno.land/std/http/http_status.ts"
 
 import { Router } from 'https://deno.land/x/oak@v4.0.0/mod.ts'
-
 import { Request, Response } from 'https://deno.land/x/oak@v4.0.0/mod.ts'
 
 import { signUp, signIn } from './usecase.ts'
