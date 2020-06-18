@@ -5,6 +5,10 @@ import { signUpRepo, signInRepo, existEmailRepo } from './repository/account.ts'
 
 const signUp = async (account: Account) => {
     const existEmail = await existEmailRepo(account.email)
+    if (existEmail.error){
+        return existEmail
+    }
+
     if (existEmail !== undefined){
         return {
             error: ErrEmailDuplicate
