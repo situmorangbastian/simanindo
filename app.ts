@@ -11,7 +11,6 @@ import mysql from './repository/mysql.ts'
 mysql.link([AccountModel])
 await mysql.sync()
 
-
 const app = new Application()
 
 app.use(router.routes())
