@@ -1,42 +1,63 @@
-import { createHash } from "https://deno.land/std/hash/mod.ts";
+import { createHash } from "https://deno.land/std/hash/mod.ts"
 
-import { Account, ErrNotFound, ErrEmailDuplicate } from "./entity.ts"
+import { Context } from 'https://deno.land/x/oak@v6.3.1/mod.ts'
+
+import { Account, ErrNotFound, ErrEmailDuplicate, ErrInternalServer } from "./entity.ts"
 import { signUpRepo, signInRepo, existEmailRepo } from './repository/account.ts'
 
 const signUp = async (account: Account) => {
-    const existEmail = await existEmailRepo(account.email)
-    if (existEmail.error){
-        return existEmail
-    }
+    let result: any
 
-    if (existEmail !== undefined){
-        return {
-            error: ErrEmailDuplicate
+    try {
+        result = await existEmailRepo(account.email)
+        if (result !== undefined) {
+            return result = {
+                error: ErrEmailDuplicate
+            }
+        }
+    } catch(e) {
+        console.log(e)
+        return result = {
+            error: ErrInternalServer
         }
     }
 
-    const hash = createHash("md5");
-    hash.update(account.password);
+    const hash = createHash("md5")
+    hash.update(account.password)
     account.password = hash.toString()
 
-    const result = await signUpRepo(account)
-    return result
+    try {
+        result = await signUpRepo(account)
+        return result
+    } catch(e) {
+        console.log(e)
+        return result =  {
+            error: ErrInternalServer
+        }
+    }
 }
 
 const signIn = async (account: Account) => {
-    const hash = createHash("md5");
-    hash.update(account.password);
+    let result: any
+
+    const hash = createHash("md5")
+    hash.update(account.password)
     account.password = hash.toString()
 
-    let result = await signInRepo(account)
-
-    if (result == undefined){
-        result = {
-            error: ErrNotFound,
+    try {
+        result = await signInRepo(account)
+        if (result === undefined) {
+            return result = {
+                error: ErrNotFound,
+            }
+        }
+        return result
+    } catch(e) {
+        console.log(e)
+        return result = {
+            error: ErrInternalServer
         }
     }
-    
-    return result
 }
 
 export { signUp, signIn }

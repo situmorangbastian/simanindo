@@ -20,7 +20,7 @@ const validatorSchema = {
 
 export { 
     validator,
-    Account, 
+    Account,
     ErrNotFound,
     ErrInternalServer,
     ErrEmailDuplicate,
