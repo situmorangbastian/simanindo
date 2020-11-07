@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'https://deno.land/x/denodb/mod.ts'
+import { DataTypes, Model } from 'https://deno.land/x/denodb@v1.0.12/mod.ts'
 
 class AccountModel extends Model {
     static table = 'accounts'
