@@ -51,6 +51,8 @@ const signUpHandler = async (ctx: Context) => {
     }
 
     const result = await signUp(account)
+    ctx.response.body = result
+
     switch(result.error) { 
         case ErrEmailDuplicate:{
             ctx.response.status = Status.Conflict
@@ -61,7 +63,7 @@ const signUpHandler = async (ctx: Context) => {
             return
         }
     }
-    ctx.response.body = result
+
     ctx.response.status = Status.Created
 }
 
@@ -97,6 +99,8 @@ const signInHandler = async (ctx: Context) => {
     }
 
     const result = await signIn(account)
+    ctx.response.body = result
+
     switch(result.error){ 
         case ErrNotFound:{ 
             ctx.response.status = Status.NotFound.valueOf()
@@ -111,7 +115,7 @@ const signInHandler = async (ctx: Context) => {
             return
         }
     }
-    ctx.response.body = result
+    
     ctx.response.status = Status.OK
 }
 
