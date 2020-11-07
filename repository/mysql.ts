@@ -1,5 +1,5 @@
-import { config } from "https://deno.land/x/dotenv/mod.ts"
-import { Database } from 'https://deno.land/x/denodb/mod.ts'
+import { config } from "https://deno.land/x/dotenv@v1.0.1/mod.ts"
+import { Database } from 'https://deno.land/x/denodb@v1.0.12/mod.ts'
 
 const env = config()
 

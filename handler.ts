@@ -1,7 +1,6 @@
 import { Status } from "https://deno.land/std/http/http_status.ts"
 
-import { Router } from 'https://deno.land/x/oak@v4.0.0/mod.ts'
-import { Request, Response } from 'https://deno.land/x/oak@v4.0.0/mod.ts'
+import { Router, Context } from 'https://deno.land/x/oak@v6.3.1/mod.ts'
 
 import { signUp, signIn } from './usecase.ts'
 import { 
@@ -13,17 +12,38 @@ import {
     validator 
 } from "./entity.ts"
 
-const signUpHandler = async ({ request, response }: { request: Request, response: Response }) => {
-    const body = await request.body()
-    const account: Account = body.value
+const signUpHandler = async (ctx: Context) => {
+    if (!ctx.request.hasBody) {
+        ctx.response.status = Status.BadRequest
+        ctx.response.body = {
+            "message": "body is required"
+        }
+        return
+    }
+  
+    const body = ctx.request.body();
+    if (body.type !== "json") {
+        ctx.response.status = Status.BadRequest
+        ctx.response.body = {
+            "message": "body is must content type application/json"
+        }
+        return
+    }
+
+    const value = await body.value;
+    const account: Account = {
+        name: value.name,
+        email: value.email,
+        password: value.password,
+    }
 
     try {
         validator.applySchemaObject(validatorSchema, account, (e) => {
             const key = e.keyStack.shift()
             if(key !== undefined) {
-                response.body = { error:"invalid "+key }
-                response.status = Status.BadRequest.valueOf()
-                throw(response)
+                ctx.response.body = { error:"invalid "+key }
+                ctx.response.status = Status.BadRequest
+                throw(ctx)
             } 
         })
     } catch (response) {
@@ -31,53 +51,73 @@ const signUpHandler = async ({ request, response }: { request: Request, response
     }
 
     const result = await signUp(account)
-    response.body = result
     switch(result.error) { 
         case ErrEmailDuplicate:{
-            response.status = Status.Conflict.valueOf()
+            ctx.response.status = Status.Conflict
             return 
         }
         case ErrInternalServer:{ 
-            response.status = Status.InternalServerError.valueOf()
+            ctx.response.status = Status.InternalServerError
             return
         }
     }
-    response.status = Status.Created.valueOf()
+    ctx.response.body = result
+    ctx.response.status = Status.Created
 }
 
-const signInHandler = async ({ request, response }: { request: Request, response: Response }) => {
-    const body = await request.body()
-    const account: Account = body.value
+const signInHandler = async (ctx: Context) => {
+    if (!ctx.request.hasBody) {
+        ctx.response.status = Status.BadRequest
+        ctx.response.body = {
+            "message": "body is required"
+        }
+        return
+    }
+  
+    const body = ctx.request.body();
+    if (body.type !== "json") {
+        ctx.response.status = Status.BadRequest
+        ctx.response.body = {
+            "message": "body is must content type application/json"
+        }
+        return
+    }
+
+    const value = await body.value;
+    const account: Account = {
+        name: value.name,
+        email: value.email,
+        password: value.password,
+    }
 
     if (account.email == undefined || account.password == undefined) {
-        response.status = Status.BadRequest.valueOf()
-        response.body = { error: "email and password is required" }
+        ctx.response.status = Status.BadRequest
+        ctx.response.body = { error: "email and password is required" }
         return
     }
 
     const result = await signIn(account)
-    response.body = result
     switch(result.error){ 
         case ErrNotFound:{ 
-            response.status = Status.NotFound.valueOf()
+            ctx.response.status = Status.NotFound.valueOf()
             return 
         }
         case ErrEmailDuplicate:{
-            response.status = Status.Conflict.valueOf()
+            ctx.response.status = Status.Conflict.valueOf()
             return 
         } 
         case ErrInternalServer:{ 
-            response.status = Status.InternalServerError.valueOf()
+            ctx.response.status = Status.InternalServerError.valueOf()
             return
         }
     }
-
-    response.status = Status.OK.valueOf()
+    ctx.response.body = result
+    ctx.response.status = Status.OK
 }
 
 const router = new Router()
 
-router.get('/jarvis', (context) => {
+router.get('/health', (context) => {
 	context.response.body = 'ok'
 })
 router.post('/accounts/signup', signUpHandler)

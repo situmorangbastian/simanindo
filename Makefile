@@ -2,7 +2,7 @@ lint:
 	deno lint --unstable
 
 run:
-	deno run --allow-net --allow-read --allow-write ./app.ts
+	deno run -c tsconfig.json --allow-net --allow-read --allow-write --unstable app.ts
 
 docker:
 	docker build -t simanindo .
