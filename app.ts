@@ -4,11 +4,20 @@ import { Application, Context } from 'https://deno.land/x/oak@v6.3.1/mod.ts'
 import { config } from "https://deno.land/x/dotenv@v1.0.1/mod.ts"
 
 import { router } from './handler.ts'
-import { AccountModel } from './repository/model.ts'
-import mysql from './repository/mysql.ts'
+import mysqlClient from './repository/mysql.ts'
 
-mysql.link([AccountModel])
-await mysql.sync()
+await mysqlClient.execute(`CREATE DATABASE IF NOT EXISTS simanindo`);
+await mysqlClient.execute(`USE simanindo`);
+
+await mysqlClient.execute(`
+    CREATE TABLE IF NOT EXISTS accounts (
+        id varchar(255) DEFAULT NULL,
+        name varchar(255) DEFAULT NULL,
+        email varchar(255) DEFAULT NULL,
+        password varchar(255) DEFAULT NULL,
+        created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=latin1;`);
 
 const app = new Application()
 

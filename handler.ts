@@ -38,8 +38,8 @@ const signUpHandler = async (ctx: Context) => {
     }
 
     try {
-        validator.applySchemaObject(validatorSchema, account, (e) => {
-            const key = e.keyStack.shift()
+        validator.applySchemaObject(validatorSchema, account, (err) => {
+            const key = err.keyStack.shift()
             if(key !== undefined) {
                 ctx.response.body = { error:"invalid "+key }
                 ctx.response.status = Status.BadRequest
@@ -53,17 +53,19 @@ const signUpHandler = async (ctx: Context) => {
     const result = await signUp(account)
     ctx.response.body = result
 
-    switch(result.error) { 
-        case ErrEmailDuplicate:{
-            ctx.response.status = Status.Conflict
-            return 
-        }
-        case ErrInternalServer:{ 
-            ctx.response.status = Status.InternalServerError
-            return
+    if (result !== undefined){
+        switch(result.error) { 
+            case ErrEmailDuplicate:{
+                ctx.response.status = Status.Conflict
+                return 
+            }
+            case ErrInternalServer:{ 
+                ctx.response.status = Status.InternalServerError
+                return
+            }
         }
     }
-
+   
     ctx.response.status = Status.Created
 }
 
