@@ -29,6 +29,7 @@ const existEmailRepo = async (email: string) => {
     let result = await mysqlClient.query(`select email from accounts where email = ?`,[email])
     if (result.length === 0){
         result = undefined
+        return result
     }
 
     return result[0]

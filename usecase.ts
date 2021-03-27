@@ -8,7 +8,7 @@ import { signUpRepo, signInRepo, existEmailRepo } from './repository/account.ts'
 const signUp = async (account: Account) => {
     try {
         const result = await existEmailRepo(account.email)
-        if (result === undefined) {
+        if (result !== undefined) {
             return {
                 error: ErrEmailDuplicate
             }
