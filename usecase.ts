@@ -6,18 +6,16 @@ import { Account, ErrNotFound, ErrEmailDuplicate, ErrInternalServer } from "./en
 import { signUpRepo, signInRepo, existEmailRepo } from './repository/account.ts'
 
 const signUp = async (account: Account) => {
-    let result: any
-
     try {
-        result = await existEmailRepo(account.email)
-        if (result !== undefined) {
-            return result = {
+        const result = await existEmailRepo(account.email)
+        if (result === undefined) {
+            return {
                 error: ErrEmailDuplicate
             }
         }
     } catch(e) {
         console.log(e)
-        return result = {
+        return {
             error: ErrInternalServer
         }
     }
@@ -27,34 +25,37 @@ const signUp = async (account: Account) => {
     account.password = hash.toString()
 
     try {
-        result = await signUpRepo(account)
-        return result
+        const result = await signUpRepo(account)
+        if (result.affectedRows === 1){
+            return {
+                name: account.name,
+                email: account.email,
+            }
+        }
     } catch(e) {
         console.log(e)
-        return result =  {
+        return {
             error: ErrInternalServer
         }
     }
 }
 
 const signIn = async (account: Account) => {
-    let result: any
-
     const hash = createHash("md5")
     hash.update(account.password)
     account.password = hash.toString()
 
     try {
-        result = await signInRepo(account)
+        const result = await signInRepo(account)
         if (result === undefined) {
-            return result = {
+            return {
                 error: ErrNotFound,
             }
         }
         return result
     } catch(e) {
         console.log(e)
-        return result = {
+        return {
             error: ErrInternalServer
         }
     }

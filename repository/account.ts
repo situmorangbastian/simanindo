@@ -3,28 +3,35 @@ import { v4 } from "https://deno.land/std/uuid/mod.ts"
 import { 
     Account, 
 } from "../entity.ts"
-import { AccountModel } from "../repository/model.ts"
+import mysqlClient from "../repository/mysql.ts"
 
 const signUpRepo = async (account: Account) => {
-    await AccountModel.create({
-        id:  v4.generate(),
-        name: account.name,
-        email: account.email,
-        password: account.password
-    })
+    const result = await mysqlClient.execute(`INSERT INTO accounts(id, name, email, password) values(?,?,?,?)`, [
+        v4.generate(),
+        account.name,
+        account.email,
+        account.password
+    ])
+    
+    return result
 }
 
 const signInRepo = async (account: Account) => {
-    return await AccountModel.select('name', 'email').
-        where('email','=', account.email). 
-        where('password', '=', account.password).
-        first()
+    let result = await mysqlClient.query(`select name, email from accounts where email = ? and password = ?`,[account.email, account.password])
+    if (result.length === 0){
+        result = undefined
+    }
+
+    return result[0]
 }
 
 const existEmailRepo = async (email: string) => {
-    return await AccountModel.select('email').
-        where('email','=', email).
-        first()
+    let result = await mysqlClient.query(`select email from accounts where email = ?`,[email])
+    if (result.length === 0){
+        result = undefined
+    }
+
+    return result[0]
 }
   
 export { signUpRepo, signInRepo, existEmailRepo }

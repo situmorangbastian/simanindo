@@ -1,11 +1,5 @@
 import vs from "https://deno.land/x/value_schema/mod.ts"
 
-interface Account {
-    name: string
-    email: string
-    password: string
-}
-
 const ErrNotFound = "not found"
 const ErrInternalServer = "internal server error"
 const ErrEmailDuplicate = "email already exists"
@@ -18,9 +12,14 @@ const validatorSchema = {
     password: validator.string(),
 }
 
+export interface Account {
+    name: string
+    email: string
+    password: string
+}
+
 export { 
     validator,
-    Account,
     ErrNotFound,
     ErrInternalServer,
     ErrEmailDuplicate,
